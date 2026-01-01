@@ -66,7 +66,7 @@
   <button onclick="show('memories')">😚 my pretty baby</button>
 </nav>
 
-<!-- Note Section -->
+<!-- Sections -->
 <section id="note">
   <h2>for my baby 🥺</h2>
   <p>you’re my comfort person, my happiness, my favorite human. i made all of this just to make you smile.</p>
@@ -74,7 +74,6 @@
   <button class="bigBtn" onclick="toggleNight()">🌙 night cuddles mode</button>
 </section>
 
-<!-- Tic Tac Toe Section -->
 <section id="game">
   <h2>tic tac toe (enter my heart 💗)</h2>
   <p>only one square lets you win 😌 choose wisely baby</p>
@@ -88,14 +87,12 @@
   <button class="bigBtn" id="retryBtn" onclick="resetGame()" style="display:none">try again baby 🥺</button>
 </section>
 
-<!-- Miss You Section -->
 <section id="love">
   <h2>i miss you button 🥺</h2>
   <button class="bigBtn" onclick="missYou()">COME HERE RN</button>
   <p class="reward" id="missText"></p>
 </section>
 
-<!-- Quiz Section -->
 <section id="quiz">
   <h2>important quiz 🧠</h2>
   <p>who loves you more?</p>
@@ -104,7 +101,6 @@
   <p class="reward" id="quizResult"></p>
 </section>
 
-<!-- Secret Section -->
 <section id="secret">
   <h2>enter password 🔐</h2>
   <input id="pw" placeholder="hint: what i call you"><br><br>
@@ -112,54 +108,82 @@
   <p class="reward" id="secretText"></p>
 </section>
 
-<!-- Memories Section -->
 <section id="memories">
   <h2>my pretty baby 😚</h2>
   <p>Upload new memories here:</p>
   <input type="file" accept="image/*" multiple onchange="loadPhotos(event)">
   <div class="photos" id="photos">
     <!-- Permanent photos -->
-    <img src="https://github.com/code-ashy/Babygirl-site/blob/3554fdf39dfee9e3d59406b1349c77aa11c8f55a/Photo7.jpg">
+    <img src="https://raw.githubusercontent.com/code-ash/Babygirl-site/main/photo1.jpg">
+    <img src="https://raw.githubusercontent.com/code-ash/Babygirl-site/main/photo2.jpg">
   </div>
 </section>
 
 <script>
-// Unlock audio for Chrome Android
+// Elements
+const landing = document.getElementById('landing');
+const nav = document.getElementById('nav');
+const photos = document.getElementById('photos');
+
+// Unlock audio on first tap
 let audioUnlocked = false;
 document.addEventListener('click', function unlockAudio() {
-    if(!audioUnlocked){
-        document.querySelectorAll('audio').forEach(a=>{a.play().then(()=>a.pause()});
-        audioUnlocked = true;
-    }
+  if(!audioUnlocked){
+    document.querySelectorAll('audio').forEach(a=>{a.play().then(()=>a.pause()).catch(()=>{});});
+    audioUnlocked = true;
+  }
 }, {once:true});
 
-function playSound(a){a.currentTime=0;a.volume=0.8;a.play().catch(()=>{});} 
+// Play sound helper
+function playSound(a){a.currentTime=0;a.volume=0.8;a.play().catch(()=>{});}
+
+// Navigation & Enter site
 function enterSite(){
-  playSound(click);
-  bgm.volume=0.2;
-  bgm.play();
+  playSound(document.getElementById('click'));
+  const bgm = document.getElementById('bgm');
+  bgm.volume = 0.2;
+  bgm.play().catch(()=>{});
   landing.style.display='none';
   nav.classList.add('show');
   show('note');
 }
-function show(id){playSound(click);document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function show(id){
+  playSound(document.getElementById('click'));
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-// Floating Hearts
-setInterval(()=>{const h=document.createElement('div');h.className='floating-heart';h.style.left=Math.random()*100+'vw';h.textContent=Math.random()>0.5?'❤️':'🫶';document.body.appendChild(h);setTimeout(()=>h.remove(),7000)},600);
+// Floating hearts
+setInterval(()=>{
+  const h=document.createElement('div');
+  h.className='floating-heart';
+  h.style.left=Math.random()*100+'vw';
+  h.textContent=Math.random()>0.5?'❤️':'🫶';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),7000);
+},600);
 
-// Tic Tac Toe Game
-let winningIndex=4,gameActive=false;
-const boardEl=document.getElementById('board'),overlay=document.getElementById('gameOverlay'),msg=document.getElementById('ttt'),retry=document.getElementById('retryBtn');
-function startGame(){playSound(click);overlay.style.display='none';gameActive=true;drawBoard();}
-function drawBoard(){boardEl.innerHTML='';for(let i=0;i<9;i++){const d=document.createElement('div');d.className='cell';d.textContent=i===winningIndex?'🫶':'';d.onclick=()=>playMove(i);boardEl.appendChild(d)}}
-function playMove(i){if(!gameActive)return;if(i===winningIndex){gameActive=false;playSound(win);msg.textContent='YOU DID IT 😭🫶 U GET SMMMMM MORE LOVEE AND KISSES 😘😘😘 AND A WARM HUGG AND CUDDLES W MY BABY 🥺🫂';}else{gameActive=false;msg.textContent='awhh wrong spot 🥺 but it’s ok baby try again';retry.style.display='inline-block';}}
-function resetGame(){playSound(click);msg.textContent='';retry.style.display='none';overlay.style.display='flex';}
-function missYou(){playSound(kiss);missText.textContent='i miss you so much it hurts 🥺 come cuddle me rn';}
-function quizWin(){playSound(win);quizResult.textContent='correct 😌 reward: infinite kisses from me';}
-function unlock(){if(pw.value.toLowerCase()==='cutie babygirl'){playSound(win);secretText.textContent='this is just me saying i’m so proud of you and i love you endlessly 🥺❤️';}else{secretText.textContent='nope 😤 try again baby';}}
+// Tic Tac Toe
+let winningIndex=4, gameActive=false;
+const boardEl=document.getElementById('board');
+const overlay=document.getElementById('gameOverlay');
+const msg=document.getElementById('ttt');
+const retry=document.getElementById('retryBtn');
+
+function startGame(){playSound(document.getElementById('click')); overlay.style.display='none'; gameActive=true; drawBoard();}
+function drawBoard(){boardEl.innerHTML=''; for(let i=0;i<9;i++){const d=document.createElement('div'); d.className='cell'; d.textContent=i===winningIndex?'🫶':''; d.onclick=()=>playMove(i); boardEl.appendChild(d);}}
+function playMove(i){if(!gameActive) return; if(i===winningIndex){gameActive=false; playSound(document.getElementById('win')); msg.textContent='YOU DID IT 😭🫶 U GET SMMMMM MORE LOVEE AND KISSES 😘😘😘 AND A WARM HUGG AND CUDDLES W MY BABY 🥺🫂';} else {gameActive=false; msg.textContent='awhh wrong spot 🥺 but it’s ok baby try again'; retry.style.display='inline-block';}}
+function resetGame(){playSound(document.getElementById('click')); msg.textContent=''; retry.style.display='none'; overlay.style.display='flex';}
+
+// Other buttons
+function missYou(){playSound(document.getElementById('kiss')); document.getElementById('missText').textContent='i miss you so much it hurts 🥺 come cuddle me rn';}
+function quizWin(){playSound(document.getElementById('win')); document.getElementById('quizResult').textContent='correct 😌 reward: infinite kisses from me';}
+function unlock(){if(document.getElementById('pw').value.toLowerCase()==='cutie babygirl'){playSound(document.getElementById('win')); document.getElementById('secretText').textContent='this is just me saying i’m so proud of you and i love you endlessly 🥺❤️';} else {document.getElementById('secretText').textContent='nope 😤 try again baby';}}
 function toggleNight(){document.body.classList.toggle('night');}
-function loadPhotos(e){[...e.target.files].forEach(f=>{const i=document.createElement('img');i.src=URL.createObjectURL(f);photos.appendChild(i);});}
+function loadPhotos(e){[...e.target.files].forEach(f=>{const i=document.createElement('img'); i.src=URL.createObjectURL(f); photos.appendChild(i);});}
+
 </script>
 
 </body>
 </html>
+
